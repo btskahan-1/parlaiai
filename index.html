@@ -61,21 +61,30 @@ button.submit { background: #F5C542; color: black; border: none; border-radius: 
   </div>
 </div>
 
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
 <script>
-document.getElementById('emailForm').addEventListener('submit', async function(e) {
+document.getElementById('emailForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value;
-  try {
-    await fetch('https://formspree.io/f/xgopwzdy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ email: email })
-    });
-    document.getElementById('emailForm').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
-  } catch(err) {
-    alert('Something went wrong. Please try again.');
-  }
+  
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://docs.google.com/forms/d/e/1FAIpQLScaMf3CPQXzT7HfmnuFLS0LO0pVgD7RABNbnw7AgXDzD00R5g/formResponse';
+  form.target = 'hidden_iframe';
+  
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'entry.1741280033';
+  input.value = email;
+  form.appendChild(input);
+  
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+  
+  document.getElementById('emailForm').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
 });
 </script>
 </body>
